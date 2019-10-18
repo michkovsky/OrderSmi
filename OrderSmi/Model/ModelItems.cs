@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace OrderSmi.Model
 	[XmlType("order")]
 	public class Order
 	{
+		[JsonIgnore]
 		public int Id { get; set; }
 		[XmlElement("oxid")]
 		public int OxId { get; set; }
@@ -58,6 +60,7 @@ namespace OrderSmi.Model
 		[XmlIgnore]
 		public string Country { get; set; }
 		[XmlElement("country")]
+		[JsonIgnore]
 		public Country CountryInternal
 		{
 			get
@@ -80,7 +83,6 @@ namespace OrderSmi.Model
 	public class Payment
 	{
 		public int Id { get; set; }
-
 		[XmlElement("method-name")]
 		public string Method { get; set; }
 		[XmlElement("amount")]
