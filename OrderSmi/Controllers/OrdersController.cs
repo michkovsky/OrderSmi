@@ -41,6 +41,38 @@ namespace OrderSmi.Controllers
 
             return order;
         }
+		[HttpPut("{oxid}/{status}")]
+		public async Task<IActionResult> PutOrder(int oxid, OrderStatus status)
+		{
+			var order = await _context.Orders.FirstOrDefaultAsync(p => p.OxId == oxid);
+			if (order == null)
+			{
+				return BadRequest();
+			}
+			if (order.Status != status)
+			{
+				order.Status = status;
+				_context.Entry(order).State = EntityState.Modified;
+			}
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!OrderExists(oxid))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return NoContent();
+		}
 
 		// PUT: api/Orders/5
 		[HttpPut("{id}")]
