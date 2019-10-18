@@ -41,17 +41,52 @@ namespace OrderSmi.Controllers
 
             return order;
         }
-		[HttpPut("{oxid}/{status}")]
-		public async Task<IActionResult> PutOrder(string oxid, OrderStatus status)
+		[HttpPut("{oxid}/{invoice}")]
+		public async Task<IActionResult> PutInvoiceNumber(string oxid, int invoice)
 		{
 			var order = await _context.Orders.FirstOrDefaultAsync(p => p.OxId == oxid);
 			if (order == null)
 			{
 				return BadRequest();
 			}
-			if (order.Status != status)
+			if (order.InvoiceNumber != invoice)
 			{
-				order.Status = status;
+				order.InvoiceNumber = invoice;
+				_context.Entry(order).State = EntityState.Modified;
+			}
+
+			try
+			{
+				if (_context.ChangeTracker.HasChanges())
+					await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!OrderExists(oxid))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return NoContent();
+		}
+
+		[HttpPut("{oxid}")]
+		public async Task<IActionResult> PutStatus(string oxid,[FromBody] string status)
+		{
+			var order = await _context.Orders.FirstOrDefaultAsync(p => p.OxId == oxid);
+			if (order == null)
+			{
+				return BadRequest();
+			}
+			var orderStatus = Enum.Parse<OrderStatus>(status,true);
+			if (order.Status != orderStatus)
+			{
+				order.Status = orderStatus;
 				_context.Entry(order).State = EntityState.Modified;
 			}
 
