@@ -19,7 +19,7 @@ namespace OrderSmi.Model
 		[JsonIgnore]
 		public int Id { get; set; }
 		[XmlElement("oxid")]
-		public int OxId { get; set; }
+		public string OxId { get; set; }
 		[XmlElement("orderdate")]
 		public DateTime OrderDate { get; set; }
 		[XmlElement("billingaddress")]
