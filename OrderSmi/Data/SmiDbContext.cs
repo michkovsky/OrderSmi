@@ -15,6 +15,7 @@ namespace OrderSmi.Data
 			{
 				var ent = modelBuilder.Entity<m.Order>();
 				ent.HasAlternateKey(p => p.OxId);
+				ent.Property(p => p.OxId).HasMaxLength(16);
 			}
 			{
 				var ent = modelBuilder.Entity<m.Address>();
