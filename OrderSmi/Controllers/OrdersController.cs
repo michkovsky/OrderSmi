@@ -23,9 +23,15 @@ namespace OrderSmi.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders([FromBody] string oxidFilter)
         {
-            return await _context.Orders.Include(p=>p.BillingAddress).ToListAsync();
+			var q = _context.Orders.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(oxidFilter))
+			{
+				q = q.Where(p => p.OxId.Contains(oxidFilter));
+			}
+            return await q.Include(p=>p.BillingAddress).ToListAsync();
         }
 
         // GET: api/Orders/5
