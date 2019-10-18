@@ -29,10 +29,10 @@ namespace OrderSmi.Controllers
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        [HttpGet("{oxid}")]
+        public async Task<ActionResult<Order>> GetOrder(int oxid)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders.FirstOrDefaultAsync(p => p.OxId == oxid);
 
             if (order == null)
             {
@@ -42,8 +42,8 @@ namespace OrderSmi.Controllers
             return order;
         }
 
-        // PUT: api/Orders/5
-        [HttpPut("{id}")]
+		// PUT: api/Orders/5
+		[HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
         {
             if (id != order.Id)
